@@ -90,45 +90,50 @@ namespace Bookify.Infrastructure.Data
                 }
             }
 
-            // Seed room types if none exist
+            // Seed room types if none exist - Qeshm Diving School specific
             if (!context.RoomTypes.Any())
             {
                 var roomTypes = new List<RoomType>
                 {
                     new RoomType
                     {
-                        Name = "Standard Room",
-                        Description = "Comfortable room with basic amenities",
-                        PricePerNight = 99.99m,
-                        Capacity = 2
+                        Name = "Diver's Bunk Room",
+                        Description = "Budget-friendly shared accommodation for diving enthusiasts with diving gear storage",
+                        PricePerNight = 45.00m,
+                        Capacity = 4,
+                        Amenities = "Gear storage, Shared bathroom, Air conditioning, Wi-Fi, Dive equipment drying area"
                     },
                     new RoomType
                     {
-                        Name = "Deluxe Room",
-                        Description = "Spacious room with premium amenities",
-                        PricePerNight = 149.99m,
-                        Capacity = 3
+                        Name = "Ocean View Room",
+                        Description = "Comfortable private room with stunning views of the Persian Gulf, perfect for divers",
+                        PricePerNight = 85.00m,
+                        Capacity = 2,
+                        Amenities = "Ocean view, Private bathroom, Gear storage, Air conditioning, Mini-fridge, Wi-Fi"
                     },
                     new RoomType
                     {
-                        Name = "Suite",
-                        Description = "Luxurious suite with separate living area",
-                        PricePerNight = 249.99m,
-                        Capacity = 4
+                        Name = "Dive Master Suite",
+                        Description = "Premium accommodation for dive masters and instructors with dedicated gear room",
+                        PricePerNight = 120.00m,
+                        Capacity = 2,
+                        Amenities = "Private gear room, Ocean view balcony, King-size bed, Private bathroom, Work desk, Wi-Fi, Mini-bar"
                     },
                     new RoomType
                     {
-                        Name = "Family Room",
-                        Description = "Perfect for families with children",
-                        PricePerNight = 199.99m,
-                        Capacity = 5
+                        Name = "Family Diving Package Room",
+                        Description = "Spacious family room designed for diving families with children, includes equipment storage",
+                        PricePerNight = 150.00m,
+                        Capacity = 4,
+                        Amenities = "Two bedrooms, Gear storage for family, Private bathroom, Ocean view, Air conditioning, Wi-Fi, Kitchenette"
                     },
                     new RoomType
                     {
-                        Name = "Executive Suite",
-                        Description = "Premium suite for business travelers",
-                        PricePerNight = 299.99m,
-                        Capacity = 2
+                        Name = "Coral Reef Villa",
+                        Description = "Luxury villa with private beach access and dedicated dive guide service",
+                        PricePerNight = 250.00m,
+                        Capacity = 3,
+                        Amenities = "Private beach access, Personal dive guide service, Full gear storage, Ocean view terrace, Luxury bathroom, Living area, Wi-Fi, Mini-bar, Breakfast included"
                     }
                 };
 
@@ -136,28 +141,29 @@ namespace Bookify.Infrastructure.Data
                 await context.SaveChangesAsync();
             }
 
-            // Seed rooms if none exist
+            // Seed rooms if none exist - Qeshm Diving School specific room numbering
             if (!context.Rooms.Any())
             {
                 var roomTypes = await context.RoomTypes.ToListAsync();
                 var rooms = new List<Room>();
 
-                // Create 20 rooms with different types and availability
+                // Create 20 rooms with Qeshm Diving School naming convention (D for Diver, V for Villa)
                 for (int i = 1; i <= 20; i++)
                 {
                     var roomType = roomTypes[(i - 1) % roomTypes.Count];
+                    string roomPrefix = roomType.Name.Contains("Villa") ? "V" : "D";
                     rooms.Add(new Room
                     {
-                        RoomNumber = $"{100 + i}",
+                        RoomNumber = $"{roomPrefix}{100 + i}",
                         RoomTypeId = roomType.Id,
                         IsAvailable = true // All rooms are available for testing
                     });
                 }
 
-                // Make a few rooms unavailable for testing
-                rooms[2].IsAvailable = false; // Room 103
-                rooms[7].IsAvailable = false; // Room 108
-                rooms[15].IsAvailable = false; // Room 116
+                // Make a few rooms unavailable for testing (under maintenance for diving equipment)
+                rooms[2].IsAvailable = false; // Room D103
+                rooms[7].IsAvailable = false; // Room D108
+                rooms[15].IsAvailable = false; // Room D116
 
                 context.Rooms.AddRange(rooms);
                 await context.SaveChangesAsync();
@@ -174,129 +180,129 @@ namespace Bookify.Infrastructure.Data
 
                 var testBookings = new List<Booking>
                 {
-					// Pending Bookings (for admin confirmation testing)
+					// Pending Bookings (for admin confirmation testing) - Updated with Qeshm prices
 					new Booking
                     {
                         UserId = customer1Obj.Id,
-                        RoomId = rooms[0].Id, // Room 101
+                        RoomId = rooms[0].Id, // First room (Diver's Bunk)
 						CheckInDate = DateTime.Today.AddDays(2),
                         CheckOutDate = DateTime.Today.AddDays(5),
-                        TotalCost = 299.97m, // 3 nights * 99.99
-						Status = "Pending", // Changed from enum to string
+                        TotalCost = 135.00m, // 3 nights * 45.00
+						Status = "Pending",
 						CreatedAt = DateTime.UtcNow.AddDays(-1)
                     },
                     new Booking
                     {
                         UserId = customer2Obj.Id,
-                        RoomId = rooms[1].Id, // Room 102
+                        RoomId = rooms[1].Id, // Second room
 						CheckInDate = DateTime.Today.AddDays(3),
                         CheckOutDate = DateTime.Today.AddDays(6),
-                        TotalCost = 449.97m, // 3 nights * 149.99
-						Status = "Pending", // Changed from enum to string
+                        TotalCost = 255.00m, // 3 nights * 85.00
+						Status = "Pending",
 						CreatedAt = DateTime.UtcNow.AddDays(-2)
                     },
 
-					// Confirmed Bookings (for cancellation testing)
+					// Confirmed Bookings (for cancellation testing) - Updated with Qeshm prices
 					new Booking
                     {
                         UserId = customer1Obj.Id,
-                        RoomId = rooms[2].Id, // Room 103
+                        RoomId = rooms[2].Id, // Third room
 						CheckInDate = DateTime.Today.AddDays(7),
                         CheckOutDate = DateTime.Today.AddDays(10),
-                        TotalCost = 749.97m, // 3 nights * 249.99
-						Status = "Confirmed", // Changed from enum to string
+                        TotalCost = 360.00m, // 3 nights * 120.00
+						Status = "Confirmed",
 						ConfirmedAt = DateTime.UtcNow.AddDays(-1),
                         CreatedAt = DateTime.UtcNow.AddDays(-3)
                     },
                     new Booking
                     {
                         UserId = customer2Obj.Id,
-                        RoomId = rooms[3].Id, // Room 104
+                        RoomId = rooms[3].Id, // Fourth room
 						CheckInDate = DateTime.Today.AddDays(14),
                         CheckOutDate = DateTime.Today.AddDays(17),
-                        TotalCost = 599.97m, // 3 nights * 199.99
-						Status = "Confirmed", // Changed from enum to string
+                        TotalCost = 450.00m, // 3 nights * 150.00
+						Status = "Confirmed",
 						ConfirmedAt = DateTime.UtcNow.AddDays(-2),
                         CreatedAt = DateTime.UtcNow.AddDays(-4)
                     },
 
-					// Active Bookings (currently ongoing)
+					// Active Bookings (currently ongoing) - Updated with Qeshm prices
 					new Booking
                     {
                         UserId = customer1Obj.Id,
-                        RoomId = rooms[4].Id, // Room 105
+                        RoomId = rooms[4].Id, // Fifth room
 						CheckInDate = DateTime.Today.AddDays(-1),
                         CheckOutDate = DateTime.Today.AddDays(2),
-                        TotalCost = 899.97m, // 3 nights * 299.99
-						Status = "Active", // Changed from enum to string
+                        TotalCost = 750.00m, // 3 nights * 250.00
+						Status = "Active",
 						ConfirmedAt = DateTime.UtcNow.AddDays(-5),
                         CreatedAt = DateTime.UtcNow.AddDays(-10)
                     },
 
-					// Completed Bookings (past bookings)
+					// Completed Bookings (past bookings) - Updated with Qeshm prices
 					new Booking
                     {
                         UserId = customer2Obj.Id,
-                        RoomId = rooms[5].Id, // Room 106
+                        RoomId = rooms[5].Id, // Sixth room
 						CheckInDate = DateTime.Today.AddDays(-10),
                         CheckOutDate = DateTime.Today.AddDays(-7),
-                        TotalCost = 299.97m, // 3 nights * 99.99
-						Status = "Completed", // Changed from enum to string
+                        TotalCost = 135.00m, // 3 nights * 45.00
+						Status = "Completed",
 						ConfirmedAt = DateTime.Today.AddDays(-15),
                         CreatedAt = DateTime.Today.AddDays(-20)
                     },
 
-					// Cancelled Bookings (for testing cancellation flow)
+					// Cancelled Bookings (for testing cancellation flow) - Updated with Qeshm prices
 					new Booking
                     {
                         UserId = customer1Obj.Id,
-                        RoomId = rooms[6].Id, // Room 107
+                        RoomId = rooms[6].Id, // Seventh room
 						CheckInDate = DateTime.Today.AddDays(5),
                         CheckOutDate = DateTime.Today.AddDays(8),
-                        TotalCost = 449.97m, // 3 nights * 149.99
-						Status = "Cancelled", // Changed from enum to string
+                        TotalCost = 255.00m, // 3 nights * 85.00
+						Status = "Cancelled",
 						CancelledAt = DateTime.UtcNow.AddDays(-1),
-                        CancellationReason = "Change of plans",
-                        RefundAmount = 404.97m,
-                        CancellationFee = 45.00m,
+                        CancellationReason = "Change of diving plans",
+                        RefundAmount = 230.00m,
+                        CancellationFee = 25.00m,
                         ConfirmedAt = DateTime.UtcNow.AddDays(-3),
                         CreatedAt = DateTime.UtcNow.AddDays(-5)
                     },
 
-					// Rejected Bookings (for admin rejection testing)
+					// Rejected Bookings (for admin rejection testing) - Updated with Qeshm prices
 					new Booking
                     {
                         UserId = customer2Obj.Id,
-                        RoomId = rooms[7].Id, // Room 108
+                        RoomId = rooms[7].Id, // Eighth room
 						CheckInDate = DateTime.Today.AddDays(1),
                         CheckOutDate = DateTime.Today.AddDays(4),
-                        TotalCost = 749.97m, // 3 nights * 249.99
-						Status = "Rejected", // Changed from enum to string
+                        TotalCost = 360.00m, // 3 nights * 120.00
+						Status = "Rejected",
 						RejectedAt = DateTime.UtcNow.AddDays(-1),
-                        RejectionReason = "Room under maintenance",
+                        RejectionReason = "Room under maintenance for diving equipment",
                         CreatedAt = DateTime.UtcNow.AddDays(-2)
                     },
 
-					// Overlapping Bookings (for availability testing)
+					// Overlapping Bookings (for availability testing) - Updated with Qeshm prices
 					new Booking
                     {
                         UserId = customer1Obj.Id,
-                        RoomId = rooms[8].Id, // Room 109
+                        RoomId = rooms[8].Id, // Ninth room
 						CheckInDate = DateTime.Today.AddDays(10),
                         CheckOutDate = DateTime.Today.AddDays(15),
-                        TotalCost = 1249.95m, // 5 nights * 249.99
-						Status = "Confirmed", // Changed from enum to string
+                        TotalCost = 1250.00m, // 5 nights * 250.00
+						Status = "Confirmed",
 						ConfirmedAt = DateTime.UtcNow.AddDays(-2),
                         CreatedAt = DateTime.UtcNow.AddDays(-5)
                     },
                     new Booking
                     {
                         UserId = customer2Obj.Id,
-                        RoomId = rooms[9].Id, // Room 110
+                        RoomId = rooms[9].Id, // Tenth room
 						CheckInDate = DateTime.Today.AddDays(20),
                         CheckOutDate = DateTime.Today.AddDays(25),
-                        TotalCost = 999.95m, // 5 nights * 199.99
-						Status = "Confirmed", // Changed from enum to string
+                        TotalCost = 750.00m, // 5 nights * 150.00
+						Status = "Confirmed",
 						ConfirmedAt = DateTime.UtcNow.AddDays(-1),
                         CreatedAt = DateTime.UtcNow.AddDays(-3)
                     }
@@ -314,26 +320,26 @@ namespace Bookify.Infrastructure.Data
 
                 var conflictBookings = new List<Booking>
                 {
-					// Same room, overlapping dates
+					// Same room, overlapping dates - Updated with Qeshm prices
 					new Booking
                     {
                         UserId = customer1Obj.Id,
-                        RoomId = rooms[0].Id, // Room 111
+                        RoomId = rooms[0].Id, // First room
 						CheckInDate = DateTime.Today.AddDays(5),
                         CheckOutDate = DateTime.Today.AddDays(8),
-                        TotalCost = 299.97m,
-                        Status = "Confirmed", // Changed from enum to string
+                        TotalCost = 135.00m, // 3 nights * 45.00
+                        Status = "Confirmed",
 						ConfirmedAt = DateTime.UtcNow.AddDays(-1),
                         CreatedAt = DateTime.UtcNow.AddDays(-3)
                     },
                     new Booking
                     {
                         UserId = customer1Obj.Id,
-                        RoomId = rooms[0].Id, // Same room 111
+                        RoomId = rooms[0].Id, // Same room
 						CheckInDate = DateTime.Today.AddDays(7), // Overlaps with previous
 						CheckOutDate = DateTime.Today.AddDays(10),
-                        TotalCost = 299.97m,
-                        Status = "Confirmed", // Changed from enum to string
+                        TotalCost = 135.00m, // 3 nights * 45.00
+                        Status = "Confirmed",
 						ConfirmedAt = DateTime.UtcNow.AddDays(-1),
                         CreatedAt = DateTime.UtcNow.AddDays(-2)
                     }

@@ -68,49 +68,54 @@ namespace Bookify.Infrastructure.Data
 			{
 				new RoomType
 		{
-			Name = "Standard Room",
-			Description = "Comfortable room with basic amenities",
-			PricePerNight = 99.99m,
-			Capacity = 2,
-			ImageUrl = "/images/rooms/standard.jpeg"
-		},
-		new RoomType
-		{
-			Name = "Deluxe Room",
-			Description = "Spacious room with premium amenities",
-			PricePerNight = 149.99m,
-			Capacity = 3,
-			ImageUrl = "/images/rooms/deluxe.jpeg"
-		},
-		new RoomType
-		{
-			Name = "Suite",
-			Description = "Luxurious suite with separate living area",
-			PricePerNight = 249.99m,
+			Name = "Diver's Bunk Room",
+			Description = "Budget-friendly shared accommodation for diving enthusiasts with diving gear storage",
+			PricePerNight = 45.00m,
 			Capacity = 4,
-			ImageUrl = "/images/rooms/suite.jpg"
+			ImageUrl = "/images/rooms/divers-bunk.jpg",
+			Amenities = "Gear storage, Shared bathroom, Air conditioning, Wi-Fi, Dive equipment drying area"
 		},
 		new RoomType
 		{
-			Name = "Family Room",
-			Description = "Perfect for families with children",
-			PricePerNight = 199.99m,
-			Capacity = 5,
-			ImageUrl = "/images/rooms/family.jpg"
-		},
-		new RoomType
-		{
-			Name = "Executive Suite",
-			Description = "Premium suite for business travelers",
-			PricePerNight = 299.99m,
+			Name = "Ocean View Room",
+			Description = "Comfortable private room with stunning views of the Persian Gulf, perfect for divers",
+			PricePerNight = 85.00m,
 			Capacity = 2,
-			ImageUrl = "/images/rooms/executive.jpg"
+			ImageUrl = "/images/rooms/ocean-view.jpg",
+			Amenities = "Ocean view, Private bathroom, Gear storage, Air conditioning, Mini-fridge, Wi-Fi"
+		},
+		new RoomType
+		{
+			Name = "Dive Master Suite",
+			Description = "Premium accommodation for dive masters and instructors with dedicated gear room",
+			PricePerNight = 120.00m,
+			Capacity = 2,
+			ImageUrl = "/images/rooms/divemaster-suite.jpg",
+			Amenities = "Private gear room, Ocean view balcony, King-size bed, Private bathroom, Work desk, Wi-Fi, Mini-bar"
+		},
+		new RoomType
+		{
+			Name = "Family Diving Package Room",
+			Description = "Spacious family room designed for diving families with children, includes equipment storage",
+			PricePerNight = 150.00m,
+			Capacity = 4,
+			ImageUrl = "/images/rooms/family-diving.jpg",
+			Amenities = "Two bedrooms, Gear storage for family, Private bathroom, Ocean view, Air conditioning, Wi-Fi, Kitchenette"
+		},
+		new RoomType
+		{
+			Name = "Coral Reef Villa",
+			Description = "Luxury villa with private beach access and dedicated dive guide service",
+			PricePerNight = 250.00m,
+			Capacity = 3,
+			ImageUrl = "/images/rooms/coral-villa.jpg",
+			Amenities = "Private beach access, Personal dive guide service, Full gear storage, Ocean view terrace, Luxury bathroom, Living area, Wi-Fi, Mini-bar, Breakfast included"
 		}
 			};
 
 			await context.RoomTypes.AddRangeAsync(roomTypes);
 			await context.SaveChangesAsync();
-			_logger.LogInformation("Seeded {Count} room types with images.", roomTypes.Length);
+			_logger.LogInformation("Seeded {Count} Qeshm Diving School room types with images.", roomTypes.Length);
 		}
 
 		private async Task SeedRoomsAsync(BookifyDbContext context)
@@ -119,35 +124,41 @@ namespace Bookify.Infrastructure.Data
 
 			var roomTypes = await context.RoomTypes.ToListAsync();
 
-			var standard = roomTypes.First(rt => rt.Name == "Standard Room").Id;
-			var deluxe = roomTypes.First(rt => rt.Name == "Deluxe Room").Id;
-			var suite = roomTypes.First(rt => rt.Name == "Suite").Id;
-			var family = roomTypes.First(rt => rt.Name == "Family Room").Id;
-			var executive = roomTypes.First(rt => rt.Name == "Executive Suite").Id;
+			var bunkRoom = roomTypes.First(rt => rt.Name == "Diver's Bunk Room").Id;
+			var oceanView = roomTypes.First(rt => rt.Name == "Ocean View Room").Id;
+			var diveMaster = roomTypes.First(rt => rt.Name == "Dive Master Suite").Id;
+			var familyDiving = roomTypes.First(rt => rt.Name == "Family Diving Package Room").Id;
+			var coralVilla = roomTypes.First(rt => rt.Name == "Coral Reef Villa").Id;
 
 			var rooms = new[]
 			{
-				new Room { RoomNumber = "101", RoomTypeId = standard, IsAvailable = true },
-				new Room { RoomNumber = "102", RoomTypeId = standard, IsAvailable = true },
-				new Room { RoomNumber = "103", RoomTypeId = standard, IsAvailable = true },
-				new Room { RoomNumber = "104", RoomTypeId = standard, IsAvailable = true },
+				// Diver's Bunk Rooms (D prefix for diver rooms, first floor)
+				new Room { RoomNumber = "D101", RoomTypeId = bunkRoom, IsAvailable = true },
+				new Room { RoomNumber = "D102", RoomTypeId = bunkRoom, IsAvailable = true },
+				new Room { RoomNumber = "D103", RoomTypeId = bunkRoom, IsAvailable = true },
+				new Room { RoomNumber = "D104", RoomTypeId = bunkRoom, IsAvailable = true },
 
-				new Room { RoomNumber = "201", RoomTypeId = deluxe, IsAvailable = true },
-				new Room { RoomNumber = "202", RoomTypeId = deluxe, IsAvailable = true },
+				// Ocean View Rooms (second floor)
+				new Room { RoomNumber = "D201", RoomTypeId = oceanView, IsAvailable = true },
+				new Room { RoomNumber = "D202", RoomTypeId = oceanView, IsAvailable = true },
+				new Room { RoomNumber = "D203", RoomTypeId = oceanView, IsAvailable = true },
 
-				new Room { RoomNumber = "301", RoomTypeId = suite, IsAvailable = true },
-				new Room { RoomNumber = "302", RoomTypeId = suite, IsAvailable = true },
+				// Dive Master Suites (third floor)
+				new Room { RoomNumber = "D301", RoomTypeId = diveMaster, IsAvailable = true },
+				new Room { RoomNumber = "D302", RoomTypeId = diveMaster, IsAvailable = true },
 
-				new Room { RoomNumber = "401", RoomTypeId = family, IsAvailable = true },
-				new Room { RoomNumber = "402", RoomTypeId = family, IsAvailable = true },
+				// Family Diving Package Rooms (fourth floor)
+				new Room { RoomNumber = "D401", RoomTypeId = familyDiving, IsAvailable = true },
+				new Room { RoomNumber = "D402", RoomTypeId = familyDiving, IsAvailable = true },
 
-				new Room { RoomNumber = "501", RoomTypeId = executive, IsAvailable = true },
-				new Room { RoomNumber = "502", RoomTypeId = executive, IsAvailable = true }
+				// Coral Reef Villas (V prefix, beachfront separate buildings)
+				new Room { RoomNumber = "V501", RoomTypeId = coralVilla, IsAvailable = true },
+				new Room { RoomNumber = "V502", RoomTypeId = coralVilla, IsAvailable = true }
 			};
 
 			await context.Rooms.AddRangeAsync(rooms);
 			await context.SaveChangesAsync();
-			_logger.LogInformation("Seeded {Count} rooms.", rooms.Length);
+			_logger.LogInformation("Seeded {Count} Qeshm Diving School rooms.", rooms.Length);
 		}
 
 		private async Task<User> SeedAdminUserAsync(UserManager<User> userManager)
