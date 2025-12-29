@@ -114,4 +114,18 @@ You can find the full project files here:
 License
 This project is licensed under the DEPI License.
 
+---
+
+## 🌐 Documentation in Other Languages
+
+- [🇮🇷 فارسی (Persian/Farsi)](README.fa.md)
+
+### Additional Documentation
+
+- [📦 Installation Guide (Persian)](INSTALLATION.fa.md)
+- [🐳 Docker Setup Guide](DOCKER.md)
+- [🧪 API Testing Guide](API_TESTING_GUIDE.md)
+- [⚡ Quick Start Testing](QUICK_START_TESTING.md)
+
+---
 
